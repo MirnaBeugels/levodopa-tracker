@@ -55,7 +55,7 @@ body {
     display: none;
 }
 
-header, #login, footer, #loggedin, #registration, #signedOut {
+header, #login, footer, #loggedin, #registration, #signedOut, #settings {
     display: grid;
     width: 80vw;
     max-width: 600px;
@@ -74,11 +74,11 @@ footer {
     align-self: end;
 }
 
-#login, #registration {
+#login, #registration, #loggedin, #settings {
     align-self: center;
 }
 
-h1, #login #form, #registration #form, footer p, #signedOut h2, #signedOut p {
+h1, #login #form, #registration #form, #loggedin #form, footer p, #signedOut h2, #signedOut p {
     justify-self: center;
     text-align: center;
 }
@@ -178,6 +178,29 @@ button {
 #registerLink:hover, #inlogLink:hover, #logoutLink:hover {
     background-size: 0 3px, 100% 3px;
 }
+
+#previousDose, #nextDose {
+    width: 100%;
+    border-bottom: 1px solid #394D60;
+    font-size: 125%;
+    padding: 16px 0;
+    color: #fff;
+}
+
+#previousDose p, #nextDose p {
+    font-size: 75%;
+    color: #394D60;
+}
+
+#foodStatus {
+    margin-bottom: 32px;
+    margin-top: 32px;
+    text-align: center;
+}
+
+ion-icon {
+    font-size: 128px;
+  }
 
 .thicktext {
     font-weight: 900;

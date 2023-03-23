@@ -2,6 +2,7 @@
 
 const btnLogin = document.querySelector('#btnLogin');
 const btnRegister = document.querySelector('#btnRegister');
+const btnSettings = document.querySelector('#btnSettings');
 const newEmail = document.querySelector('#newEmail');
 const newDisplayName = document.querySelector('#newDisplayName');
 const newPassword = document.querySelector('#newPassword');
@@ -12,12 +13,18 @@ const loginSection = document.querySelector('#login');
 const loggedinSection = document.querySelector('#loggedin');
 const registerSection = document.querySelector('#registration')
 const signedOutSection = document.querySelector('#signedOut');
+const settingsSection = document.querySelector('#settings');
 const registrationParagraph = document.querySelector('#registrationP')
 const alreadyRegisteredParagraph = document.querySelector('#alreadyregisteredP')
 const logoutLink = document.querySelector('#logoutLink');
 const logoutParagraph = document.querySelector('#logoutP');
 const registerLink = document.querySelector('#registerLink');
 const alreadyRegisteredLink = document.querySelector('#inlogLink');
+const previousDoseTime = document.querySelector('#previousDoseTime');
+const previousDoseTimeAgo = document.querySelector('#previousDoseTimeAgo');
+const nextDoseTime = document.querySelector('#nextDoseTime');
+const nextDoseTimeAway = document.querySelector('#nextDoseTimeAway');
+const currentFoodStatus = document.querySelector('#currentFoodStatus');
 const divLoginError = document.querySelector('#divLoginError');
 const lblLoginErrorMessage = document.querySelector('#lblLoginErrorMessage');
 const divLoginSucces = document.querySelector('#divLoginSucces');
@@ -64,6 +71,7 @@ onAuthStateChanged(auth, (user) => {
         loggedinSection.style.display = "grid";
         signedOutSection.style.display = "none";
         registerSection.style.display = "none";
+        settingsSection.style.display = "none";
         registrationParagraph.style.display = "none";
         alreadyRegisteredParagraph.style.display = "none";
         logoutParagraph.style.display = "block";
@@ -78,6 +86,7 @@ onAuthStateChanged(auth, (user) => {
         registerSection.style.display = "none";
         loggedinSection.style.display = "none";
         signedOutSection.style.display = "none";
+        settingsSection.style.display = "none";
         logoutParagraph.style.display = "none";
         registrationParagraph.style.display = "block";
         alreadyRegisteredParagraph.style.display = "none";
@@ -105,6 +114,7 @@ function showRegistrationForm() {
     loggedinSection.style.display = "none";
     signedOutSection.style.display = "none";
     registerSection.style.display = "grid";
+    settingsSection.style.display = "none";
     registrationParagraph.style.display = "none";
     alreadyRegisteredParagraph.style.display = "block";
     logoutParagraph.style.display = "none";
@@ -115,6 +125,7 @@ function showLoginForm() {
     loggedinSection.style.display = "none";
     registerSection.style.display = "none";
     signedOutSection.style.display = "none";
+    settingsSection.style.display = "none";
     registrationParagraph.style.display = "block";
     alreadyRegisteredParagraph.style.display = "none";
     logoutParagraph.style.display = "none";
@@ -149,8 +160,21 @@ function logoutUser() {
     })
 }
 
+function showSettings() {
+    loginSection.style.display = "none";
+    loggedinSection.style.display = "none";
+    registerSection.style.display = "none";
+    signedOutSection.style.display = "none";
+    settingsSection.style.display = "grid";
+    registrationParagraph.style.display = "none";
+    alreadyRegisteredParagraph.style.display = "none";
+    logoutParagraph.style.display = "block";
+}
+
 btnLogin.addEventListener("click", loginEmailPassword);
 btnRegister.addEventListener("click", registerNewUser);
+btnSettings.addEventListener("click", showSettings);
+
 registerLink.addEventListener("click", showRegistrationForm);
 alreadyRegisteredLink.addEventListener("click", showLoginForm);
 logoutLink.addEventListener("click", logoutUser);
