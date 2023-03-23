@@ -3,6 +3,7 @@
 const btnLogin = document.querySelector('#btnLogin');
 const btnRegister = document.querySelector('#btnRegister');
 const btnSettings = document.querySelector('#btnSettings');
+const btnSaveSettings = document.querySelector('#btnSaveSettings');
 const newEmail = document.querySelector('#newEmail');
 const newDisplayName = document.querySelector('#newDisplayName');
 const newPassword = document.querySelector('#newPassword');
@@ -41,7 +42,9 @@ import { getAuth,
          updateProfile,
          signOut,
          onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-auth.js"
-import { getDatabase } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js"
+import { getDatabase,
+         ref,
+         set } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js"
          // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -71,7 +74,6 @@ onAuthStateChanged(auth, (user) => {
         console.log(uid);
         console.log(displayName);
         console.log(email);
-        
         // Show and hide sections
         loginSection.style.display = "none";
         loggedinSection.style.display = "grid";
@@ -81,10 +83,8 @@ onAuthStateChanged(auth, (user) => {
         registrationParagraph.style.display = "none";
         alreadyRegisteredParagraph.style.display = "none";
         logoutParagraph.style.display = "block";
-
-        // Personalise welcome message
+        // Personalize welcome message
         userDisplayName.innerHTML = displayName;
-
     } else {
         // user is signed out
         // Show and hide sections
@@ -184,6 +184,7 @@ function addDose() {
     console.log(currentAmountOfDoses);
     var newField = document.createElement("input");
     newField.setAttribute("type", "time");
+    newField.setAttribute("class", "dose");
     newField.setAttribute("name", `intake${currentAmountOfDoses}`);
     newField.setAttribute("id", `intake${currentAmountOfDoses}`);
     intakeForm.appendChild(newField);
@@ -194,9 +195,31 @@ function removeDose() {
     currentAmountOfDoses = currentAmountOfDoses-1;
 }
 
+var dosesToSave = "";
+
+function saveSettings() {
+    dosesToSave = document.querySelectorAll('.dose');
+
+    var allIntakes = [];
+
+    dosesToSave.forEach(
+        
+        function(input) {
+            const intake = {};
+            intake.key = input.name;
+            intake.value = input.value;
+            allIntakes.push(intake);
+         }
+    );
+
+    console.log(allIntakes);
+    return allIntakes
+}
+
 btnLogin.addEventListener("click", loginEmailPassword);
 btnRegister.addEventListener("click", registerNewUser);
 btnSettings.addEventListener("click", showSettings);
+btnSaveSettings.addEventListener("click", saveSettings);
 addField.addEventListener("click", addDose);
 removeField.addEventListener("click", removeDose);
 registerLink.addEventListener("click", showRegistrationForm);

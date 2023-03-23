@@ -78,7 +78,7 @@ footer {
     align-self: center;
 }
 
-h1, #login #form, #registration #form, #loggedin #form, footer p, #signedOut h2, #signedOut p, #settings p, #settings #addRemoveIcons{
+h1, #login #form, #registration #form, #loggedin #form, footer p, #signedOut h2, #signedOut p, #settings p, #settings #addRemoveIcons, #settings #submitSettings{
     justify-self: center;
     text-align: center;
     margin-top: 32px;
@@ -87,6 +87,7 @@ h1, #login #form, #registration #form, #loggedin #form, footer p, #signedOut h2,
 #addRemoveIcons {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
 }
 
 footer p {
@@ -214,10 +215,18 @@ button {
 
 #settings ion-icon {
     font-size: 48px;
-    background: rgb(53,244,252);
-    background: linear-gradient(90deg, rgba(53,244,252,1) 0%, rgba(137,255,205,1) 100%);
     border-radius: 50px;
     display: inline;
+}
+
+ion-icon#addField {
+    background: rgb(53,244,252);
+    background: linear-gradient(90deg, rgba(53,244,252,1) 0%, rgba(137,255,205,1) 100%);
+}
+
+ion-icon#removeField {
+    background: rgb(252, 53, 99);
+    background: linear-gradient(90deg, rgba(252,53,99,1) 0%, rgb(255, 137, 161) 100%);
 }
 
 .thicktext {
