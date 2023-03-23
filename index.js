@@ -25,6 +25,9 @@ const previousDoseTimeAgo = document.querySelector('#previousDoseTimeAgo');
 const nextDoseTime = document.querySelector('#nextDoseTime');
 const nextDoseTimeAway = document.querySelector('#nextDoseTimeAway');
 const currentFoodStatus = document.querySelector('#currentFoodStatus');
+const addField = document.querySelector('#addField');
+const removeField = document.querySelector('#removeField');
+const intakeForm = document.querySelector('#intakeForm');
 const divLoginError = document.querySelector('#divLoginError');
 const lblLoginErrorMessage = document.querySelector('#lblLoginErrorMessage');
 const divLoginSucces = document.querySelector('#divLoginSucces');
@@ -38,13 +41,15 @@ import { getAuth,
          updateProfile,
          signOut,
          onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-auth.js"
-// TODO: Add SDKs for Firebase products that you want to use
+import { getDatabase } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js"
+         // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Initialize app
 const firebaseConfig = {
     apiKey: "AIzaSyAGvroXH8AhQIq0vY9lYZmfrmkBcTEbSqE",
     authDomain: "ledotrack-89b76.firebaseapp.com",
+    databaseURL: "https://ledotrack-89b76-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "ledotrack-89b76",
     storageBucket: "ledotrack-89b76.appspot.com",
     messagingSenderId: "268499313386",
@@ -54,6 +59,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 const auth = getAuth(firebaseApp);
+const database = getDatabase(firebaseApp);
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -171,10 +177,28 @@ function showSettings() {
     logoutParagraph.style.display = "block";
 }
 
+var currentAmountOfDoses = document.getElementsByClassName('dose').length;
+
+function addDose() {
+    currentAmountOfDoses = currentAmountOfDoses+1;
+    console.log(currentAmountOfDoses);
+    var newField = document.createElement("input");
+    newField.setAttribute("type", "time");
+    newField.setAttribute("name", `intake${currentAmountOfDoses}`);
+    newField.setAttribute("id", `intake${currentAmountOfDoses}`);
+    intakeForm.appendChild(newField);
+}
+
+function removeDose() {
+    intakeForm.removeChild(intakeForm.lastElementChild);
+    currentAmountOfDoses = currentAmountOfDoses-1;
+}
+
 btnLogin.addEventListener("click", loginEmailPassword);
 btnRegister.addEventListener("click", registerNewUser);
 btnSettings.addEventListener("click", showSettings);
-
+addField.addEventListener("click", addDose);
+removeField.addEventListener("click", removeDose);
 registerLink.addEventListener("click", showRegistrationForm);
 alreadyRegisteredLink.addEventListener("click", showLoginForm);
 logoutLink.addEventListener("click", logoutUser);

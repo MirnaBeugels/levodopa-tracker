@@ -78,9 +78,15 @@ footer {
     align-self: center;
 }
 
-h1, #login #form, #registration #form, #loggedin #form, footer p, #signedOut h2, #signedOut p {
+h1, #login #form, #registration #form, #loggedin #form, footer p, #signedOut h2, #signedOut p, #settings p, #settings #addRemoveIcons{
     justify-self: center;
     text-align: center;
+    margin-top: 32px;
+}
+
+#addRemoveIcons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
 footer p {
@@ -97,7 +103,7 @@ a {
     width: 100%;
 }
 
-#login #form input, #registration #form input {
+#login #form input, #registration #form input, #settings #intakeForm input {
     all: unset;
     width: 100%;
     background-color: #0B2239;
@@ -106,6 +112,10 @@ a {
     font-size: 125%;
     padding: 16px 0;
     color: #fff;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator{
+    filter: invert(100%);
 }
 
 input:-webkit-autofill {
@@ -198,9 +208,17 @@ button {
     text-align: center;
 }
 
-ion-icon {
+#loggedin ion-icon {
     font-size: 128px;
-  }
+}
+
+#settings ion-icon {
+    font-size: 48px;
+    background: rgb(53,244,252);
+    background: linear-gradient(90deg, rgba(53,244,252,1) 0%, rgba(137,255,205,1) 100%);
+    border-radius: 50px;
+    display: inline;
+}
 
 .thicktext {
     font-weight: 900;
