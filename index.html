@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Levodopa Tracker</title>
+    <script type="module" src="index.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- The header section containing the logo starts here-->
+    <header>
+        <div id="logo"></div>
+        <h1>ledo<span class="thicktext">track</span></h1>
+    </header>
+
+    <!-- The login section starts here-->
+    <section id="login">
+        <div id="form">
+            <h2>Inloggen</h2>
+            <div class="group">
+                <p>Email</p>
+                <input id="txtEmail" type="email" placeholder="jenaam@email.nl">
+            </div>
+            <div class="group">
+                <p>Wachtwoord</p>
+                <input id="txtPassword" type="password" placeholder="Wachtwoord">
+            </div>
+            <div id="divLoginError">
+                <div id="lblLoginErrorMessage">Uh oh, er ging iets verkeerd.</div>
+            </div>
+            <div id="divLoginSucces">
+                <div id="lblLoginSuccesMessage">Yes! Je bent succesvol ingelogd.</div>
+            </div>
+            <button id="btnLogin" type="button">Inloggen</button>
+        </div>
+    </section>
+
+    <!-- The registration section starts here-->
+    <section id="registration">
+        <div id="form">
+            <h2>Registreren</h2>
+            <div class="group">
+                <p>Email</p>
+                <input id="newEmail" type="email" placeholder="jenaam@email.nl">
+            </div>
+            <div class="group">
+                <p>Naam</p>
+                <input id="newDisplayName" type="text" placeholder="je naam">
+            </div>
+            <div class="group">
+                <p>Wachtwoord</p>
+                <input id="newPassword" type="password" placeholder="Wachtwoord">
+            </div>
+            <div id="divRegisterError">
+                <div id="lblRegisterErrorMessage">Uh oh, er ging iets verkeerd.</div>
+            </div>
+            <div id="divRegisterSucces">
+                <div id="lblRegisterSuccesMessage">Yes! Je bent succesvol geregistreerd.</div>
+            </div>
+            <button id="btnRegister" type="button">Registreren</button>
+    </section>
+
+    <!-- The logged section starts here-->
+    <!-- This is what is displayed after a user logs in-->
+    <section id="loggedin">
+        <p>Welkom <span class="userDisplayName"></span>!</p>
+    </section>
+
+    <!-- The logged out section starts here-->
+    <!-- This is what is displayed after a user logs out-->
+    <section id="signedOut">
+        <h2>Je bent uitgelogd</h2>
+        <p>Tot de volgende keer!</p>
+        <p>Klik op de link hieronder om opnieuw in te loggen.</p>
+    </section>
+
+    <!-- The footer starts here-->
+    <!-- This section contains some links to perform actions currently not displayed on the page-->
+    <footer>
+        <!-- Display de registration link-->
+        <p id="registrationP">
+            Nog geen account?<br />
+            <span id="registerLink">Registreren</span>
+        </p>
+        <!-- Display de login link-->
+        <p id="alreadyregisteredP">
+            Al geregistreerd?<br />
+            <span id="inlogLink">Inloggen</span>
+        </p>
+        <!-- Display de logout link-->
+        <p id="logoutP">
+            <span id="logoutLink">Uitloggen</span>
+        </p>
+    </footer>
+</body>
+</html>
