@@ -213,7 +213,12 @@ function saveSettings() {
     );
 
     console.log(allIntakes);
-    return allIntakes
+    
+    var uid = auth.currentUser.uid;
+
+    set (ref (database, 'users/'+uid, allIntakes));
+
+    // return allIntakes
 }
 
 btnLogin.addEventListener("click", loginEmailPassword);
