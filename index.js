@@ -44,9 +44,8 @@ import { getAuth,
          onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-auth.js"
 import { getDatabase,
          ref,
-         set } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js"
-         // TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+         set,
+         onValue } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js"
 
 // Initialize app
 const firebaseConfig = {
@@ -175,6 +174,22 @@ function showSettings() {
     registrationParagraph.style.display = "none";
     alreadyRegisteredParagraph.style.display = "none";
     logoutParagraph.style.display = "block";
+
+    // make a snapshot of uid's intakes in the database and listen for changes
+
+    var uid = auth.currentUser.uid;
+
+    const checkUser = ref(database, 'users/'+uid, {});
+    onValue(checkUser, (snapshot) => {
+        const data = snapshot.val();
+        console.log(data);
+    });
+
+    // check if the uid has saved intakes in the database
+    // if so, check how many there are
+    // for each intake add a time input field
+    // name and id = key, value = value
+
 }
 
 var currentAmountOfDoses = document.getElementsByClassName('dose').length;
@@ -216,7 +231,7 @@ function saveSettings() {
     
     var uid = auth.currentUser.uid;
 
-    set (ref (database, 'users/'+uid, allIntakes));
+    set (ref (database, 'users/'+uid), allIntakes);
 
     // return allIntakes
 }

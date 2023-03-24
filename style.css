@@ -217,6 +217,7 @@ button {
     font-size: 48px;
     border-radius: 50px;
     display: inline;
+    cursor: pointer;
 }
 
 ion-icon#addField {
