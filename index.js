@@ -33,6 +33,7 @@ const divLoginError = document.querySelector('#divLoginError');
 const lblLoginErrorMessage = document.querySelector('#lblLoginErrorMessage');
 const divLoginSucces = document.querySelector('#divLoginSucces');
 const lblLoginSuccesMessage = document.querySelector('#lblLoginSuccesMessage');
+const divSubmitSettingsError = document.querySelector('#divSubmitSettingsError');
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
@@ -173,20 +174,16 @@ function addUserInputs() {
 
     onValue(checkUser, (snapshot) => {
         var data = snapshot.val();
-        console.log(data);
 
         if (data != null) {
             var numberOfSavedDoses = data.length;
-            console.log(numberOfSavedDoses);
-
-            var i = 0;
 
             onValue(checkUser, (snapshot) => {
                         snapshot.forEach((childSnapshot) => {
                             const intakeNr = childSnapshot.val()["key"];
                             const intakeTime = childSnapshot.val()["value"];
-                            console.log(intakeNr);
-                            console.log(intakeTime);
+                            // console.log(intakeNr);
+                            // console.log(intakeTime);
 
                             currentAmountOfDoses = currentAmountOfDoses+1;
                             var newField = document.createElement("input");
@@ -196,10 +193,6 @@ function addUserInputs() {
                             newField.setAttribute("id", intakeNr);
                             newField.setAttribute("value", intakeTime);
                             intakeForm.appendChild(newField);
-                            i = i+1;
-
-                            console.log(`After loading a user input: ${currentAmountOfDoses} `)
-
                         });
                         }, {
                         onlyOnce: true
@@ -227,11 +220,9 @@ function showSettings() {
 
 function addDose() {
     if (currentAmountOfDoses != 0) {
-        console.log(`When there was not 0 inputs when adding a dose: ${currentAmountOfDoses} `)
         currentAmountOfDoses = currentAmountOfDoses;
     } else {
-        currentAmountOfDoses = currentAmountOfDoses+1;
-        console.log(`When there was 0 inputs when adding a dose ${currentAmountOfDoses} `)
+        currentAmountOfDoses = currentAmountOfDoses;
     }
     currentAmountOfDoses = currentAmountOfDoses+1;
     console.log(`After adding a dose ${currentAmountOfDoses} `)
@@ -246,7 +237,6 @@ function addDose() {
 function removeDose() {
     intakeForm.removeChild(intakeForm.lastElementChild);
     currentAmountOfDoses = currentAmountOfDoses-1;
-    console.log(`After deleting 1 input: ${currentAmountOfDoses} `)
 }
 
 var dosesToSave = "";
@@ -257,7 +247,6 @@ function saveSettings() {
     var allIntakes = [];
 
     dosesToSave.forEach(
-        
         function(input) {
             const intake = {};
             intake.key = input.name;
@@ -267,22 +256,36 @@ function saveSettings() {
     );
 
     console.log(allIntakes);
-    
-    var uid = auth.currentUser.uid;
 
-    set (ref (database, 'users/'+uid), allIntakes);
+    // Check if all inputs contain a time
 
-    console.log(`Before deleting all inputs: ${currentAmountOfDoses} `)
+    var checkForInput = Object.values(allIntakes);
 
-    while (intakeForm.firstChild) {
-        intakeForm.removeChild(intakeForm.lastChild)
+    console.log(checkForInput.length);
+
+    for (var i = 0; i < checkForInput.length; i++) {
+        console.log(checkForInput[i]["value"])
+        if (checkForInput[i]["value"] == "") {
+            console.log('check for empty fields');
+            divSubmitSettingsError.style.display = "block";
+            break;
+        } else {
+            console.log('ok to save');
+            divSubmitSettingsError.style.display = "none";
+            var uid = auth.currentUser.uid;
+
+            set (ref (database, 'users/'+uid), allIntakes);
+
+            while (intakeForm.firstChild) {
+                intakeForm.removeChild(intakeForm.lastChild)
+            }
+
+            currentAmountOfDoses = 0;
+
+            // return allIntakes
+            addUserInputs();
+        }
     }
-
-    currentAmountOfDoses = 0;
-    console.log(`After deleting all inputs: ${currentAmountOfDoses} `)
-
-    // return allIntakes
-    addUserInputs();
 }
 
 btnLogin.addEventListener("click", loginEmailPassword);

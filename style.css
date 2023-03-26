@@ -39,20 +39,22 @@ body {
     color: #fff;
 }
 
-#divLoginError, #divRegisterError {
+#divLoginError, #divRegisterError, #divSubmitSettingsError {
     background-color: #d0000075;
     padding: 16px;
     color: #d00000;
     border-radius: 10px;
     display: none;
+    margin-bottom: 32px;
 }
 
-#divLoginSucces, #divRegisterSucces {
+#divLoginSucces, #divRegisterSucces, #divSubmitSettingsSucces {
     background-color: #34d00075;
     padding: 16px;
     color: #34d000;
     border-radius: 10px;
     display: none;
+    margin-bottom: 32px;
 }
 
 header, #login, footer, #loggedin, #registration, #signedOut, #settings {

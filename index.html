@@ -76,7 +76,7 @@
     </section>
 
 
-    <!-- The logged section starts here-->
+    <!-- The logged in section starts here-->
     <!-- This is what is displayed after a user logs in-->
 
     <section id="loggedin">
@@ -115,7 +115,17 @@
             <ion-icon name="remove-circle-outline" id="removeField"></ion-icon>
         </p>
         <div id="submitSettings">
+
+            <div id="divSubmitSettingsError">
+                <div>Je instellingen konden niet opgeslagen worden, enkele velden zijn niet ingevuld. Kies een tijd of verwijder een leeg veld door op het minnetje te drukken.</div>
+            </div>
+
+            <div id="divSubmitSettingsSucces">
+                <div>Je instellingen zijn opgeslagen.</div>
+            </div>
+
             <button id="btnSaveSettings" type="button">Opslaan</button>
+            <button id="btnSaveSettings" type="button">Home   </button>
         </div>
     </section>
 
