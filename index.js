@@ -165,7 +165,52 @@ function logoutUser() {
     })
 }
 
+var currentAmountOfDoses = document.getElementsByClassName('dose').length;
+
+function addUserInputs() {
+    var uid = auth.currentUser.uid;
+    const checkUser = ref(database, 'users/'+uid);
+
+    onValue(checkUser, (snapshot) => {
+        var data = snapshot.val();
+        console.log(data);
+
+        if (data != null) {
+            var numberOfSavedDoses = data.length;
+            console.log(numberOfSavedDoses);
+
+            var i = 0;
+
+            onValue(checkUser, (snapshot) => {
+                        snapshot.forEach((childSnapshot) => {
+                            const intakeNr = childSnapshot.val()["key"];
+                            const intakeTime = childSnapshot.val()["value"];
+                            console.log(intakeNr);
+                            console.log(intakeTime);
+
+                            currentAmountOfDoses = currentAmountOfDoses+1;
+                            var newField = document.createElement("input");
+                            newField.setAttribute("type", "time");
+                            newField.setAttribute("class", "dose");
+                            newField.setAttribute("name", intakeNr);
+                            newField.setAttribute("id", intakeNr);
+                            newField.setAttribute("value", intakeTime);
+                            intakeForm.appendChild(newField);
+                            i = i+1;
+
+                            console.log(`After loading a user input: ${currentAmountOfDoses} `)
+
+                        });
+                        }, {
+                        onlyOnce: true
+                        });
+
+        };
+    });
+}
+
 function showSettings() {
+
     loginSection.style.display = "none";
     loggedinSection.style.display = "none";
     registerSection.style.display = "none";
@@ -176,27 +221,20 @@ function showSettings() {
     logoutParagraph.style.display = "block";
 
     // make a snapshot of uid's intakes in the database and listen for changes
-
-    var uid = auth.currentUser.uid;
-
-    const checkUser = ref(database, 'users/'+uid, {});
-    onValue(checkUser, (snapshot) => {
-        const data = snapshot.val();
-        console.log(data);
-    });
-
-    // check if the uid has saved intakes in the database
-    // if so, check how many there are
-    // for each intake add a time input field
-    // name and id = key, value = value
-
+   
+    addUserInputs();
 }
 
-var currentAmountOfDoses = document.getElementsByClassName('dose').length;
-
 function addDose() {
+    if (currentAmountOfDoses != 0) {
+        console.log(`When there was not 0 inputs when adding a dose: ${currentAmountOfDoses} `)
+        currentAmountOfDoses = currentAmountOfDoses;
+    } else {
+        currentAmountOfDoses = currentAmountOfDoses+1;
+        console.log(`When there was 0 inputs when adding a dose ${currentAmountOfDoses} `)
+    }
     currentAmountOfDoses = currentAmountOfDoses+1;
-    console.log(currentAmountOfDoses);
+    console.log(`After adding a dose ${currentAmountOfDoses} `)
     var newField = document.createElement("input");
     newField.setAttribute("type", "time");
     newField.setAttribute("class", "dose");
@@ -208,6 +246,7 @@ function addDose() {
 function removeDose() {
     intakeForm.removeChild(intakeForm.lastElementChild);
     currentAmountOfDoses = currentAmountOfDoses-1;
+    console.log(`After deleting 1 input: ${currentAmountOfDoses} `)
 }
 
 var dosesToSave = "";
@@ -233,7 +272,17 @@ function saveSettings() {
 
     set (ref (database, 'users/'+uid), allIntakes);
 
+    console.log(`Before deleting all inputs: ${currentAmountOfDoses} `)
+
+    while (intakeForm.firstChild) {
+        intakeForm.removeChild(intakeForm.lastChild)
+    }
+
+    currentAmountOfDoses = 0;
+    console.log(`After deleting all inputs: ${currentAmountOfDoses} `)
+
     // return allIntakes
+    addUserInputs();
 }
 
 btnLogin.addEventListener("click", loginEmailPassword);
