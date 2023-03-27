@@ -222,6 +222,22 @@ button {
     cursor: pointer;
 }
 
+/* #settingsIcon {
+    font-size: 128px;
+} */
+
+#goHome {
+    align-self: center;
+    text-align: center;
+}
+
+#homeIcon {
+    display: inline-block !important;
+    border-radius: 0 !important;
+    size: 48px !important;
+    margin-top: 64px;
+}
+
 ion-icon#addField {
     background: rgb(53,244,252);
     background: linear-gradient(90deg, rgba(53,244,252,1) 0%, rgba(137,255,205,1) 100%);

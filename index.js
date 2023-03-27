@@ -34,6 +34,7 @@ const lblLoginErrorMessage = document.querySelector('#lblLoginErrorMessage');
 const divLoginSucces = document.querySelector('#divLoginSucces');
 const lblLoginSuccesMessage = document.querySelector('#lblLoginSuccesMessage');
 const divSubmitSettingsError = document.querySelector('#divSubmitSettingsError');
+const homeIcon = document.querySelector('#homeIcon');
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
@@ -202,8 +203,14 @@ function addUserInputs() {
     });
 }
 
-function showSettings() {
+function removeUserInputs() {
+    while (intakeForm.firstChild) {
+        intakeForm.removeChild(intakeForm.lastChild)
+    }
+    currentAmountOfDoses = 0;
+}
 
+function showSettings() {
     loginSection.style.display = "none";
     loggedinSection.style.display = "none";
     registerSection.style.display = "none";
@@ -212,10 +219,21 @@ function showSettings() {
     registrationParagraph.style.display = "none";
     alreadyRegisteredParagraph.style.display = "none";
     logoutParagraph.style.display = "block";
-
-    // make a snapshot of uid's intakes in the database and listen for changes
    
+    removeUserInputs()
     addUserInputs();
+}
+
+function goHome(event) {
+    event.preventDefault();
+    loginSection.style.display = "none";
+    loggedinSection.style.display = "grid";
+    registerSection.style.display = "none";
+    signedOutSection.style.display = "none";
+    settingsSection.style.display = "none";
+    registrationParagraph.style.display = "none";
+    alreadyRegisteredParagraph.style.display = "none";
+    logoutParagraph.style.display = "block";
 }
 
 function addDose() {
@@ -276,13 +294,8 @@ function saveSettings() {
 
             set (ref (database, 'users/'+uid), allIntakes);
 
-            while (intakeForm.firstChild) {
-                intakeForm.removeChild(intakeForm.lastChild)
-            }
-
-            currentAmountOfDoses = 0;
-
-            // return allIntakes
+            // remove and return allIntakes as saved
+            removeUserInputs()
             addUserInputs();
         }
     }
@@ -297,3 +310,4 @@ removeField.addEventListener("click", removeDose);
 registerLink.addEventListener("click", showRegistrationForm);
 alreadyRegisteredLink.addEventListener("click", showLoginForm);
 logoutLink.addEventListener("click", logoutUser);
+homeIcon.addEventListener("click", goHome);
