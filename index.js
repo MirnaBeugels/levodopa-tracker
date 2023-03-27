@@ -1,4 +1,4 @@
-// UI elements
+// Variables for the UI elements
 
 const btnLogin = document.querySelector('#btnLogin');
 const btnRegister = document.querySelector('#btnRegister');
@@ -36,6 +36,11 @@ const lblLoginSuccesMessage = document.querySelector('#lblLoginSuccesMessage');
 const divSubmitSettingsError = document.querySelector('#divSubmitSettingsError');
 const homeIcon = document.querySelector('#homeIcon');
 
+// Calling variables for global use
+
+var currentAmountOfDoses = document.getElementsByClassName('dose').length;
+var dosesToSave = "";
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
 import { getAuth,
@@ -49,7 +54,7 @@ import { getDatabase,
          set,
          onValue } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-database.js"
 
-// Initialize app
+// Initialize our Firebase app
 const firebaseConfig = {
     apiKey: "AIzaSyAGvroXH8AhQIq0vY9lYZmfrmkBcTEbSqE",
     authDomain: "ledotrack-89b76.firebaseapp.com",
@@ -61,9 +66,10 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
-
 const auth = getAuth(firebaseApp);
 const database = getDatabase(firebaseApp);
+
+// The function below listens to changes in that logged in state of a user
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -100,6 +106,8 @@ onAuthStateChanged(auth, (user) => {
     }
 })
 
+// After clicking the login button the user gets logged in
+
 function loginEmailPassword(event) {
     const loginEmail = txtEmail.value;
     const loginPassword = txtPassword.value;
@@ -116,6 +124,9 @@ function loginEmailPassword(event) {
     event.preventDefault()
 };
 
+// When clicking on the registration link, the registration form is shown
+// This link is visible when the login form is visible
+
 function showRegistrationForm() {
     loginSection.style.display = "none";
     loggedinSection.style.display = "none";
@@ -127,6 +138,9 @@ function showRegistrationForm() {
     logoutParagraph.style.display = "none";
 }
 
+// When clicking on the login link, the login form is shown
+// This link is shown when the registration form is visibile
+
 function showLoginForm() {
     loginSection.style.display = "grid";
     loggedinSection.style.display = "none";
@@ -137,6 +151,9 @@ function showLoginForm() {
     alreadyRegisteredParagraph.style.display = "none";
     logoutParagraph.style.display = "none";
 }
+
+// This function executes after clicking the register button
+// This button is visible when the registration form is visible
 
 function registerNewUser(value) {
     const chosenEmail = newEmail.value;
@@ -159,6 +176,9 @@ function registerNewUser(value) {
     })
 }
 
+// The logoutUser function executes after clicking the logout link
+// This link is visible only when a user is logged
+
 function logoutUser() {
     signOut(auth).then(() => {
         // user was signed out
@@ -167,7 +187,11 @@ function logoutUser() {
     })
 }
 
-var currentAmountOfDoses = document.getElementsByClassName('dose').length;
+// REMOVE THIS: var currentAmountOfDoses = document.getElementsByClassName('dose').length;
+
+// This funtion executes after clicking on the Settings button and after saving settings
+// It retrieves all the settings the logged in user has saved from Firebase
+// After that it creates an input field for each intake and shows the saved times
 
 function addUserInputs() {
     var uid = auth.currentUser.uid;
@@ -203,12 +227,19 @@ function addUserInputs() {
     });
 }
 
+// This function executes after saving settings and after clicking the home button
+// It makes sure all currently shown or hidden inputs are deleted
+// This way our inputs don't double in number when when we move back to the settings page and load a users saved settings
+
 function removeUserInputs() {
     while (intakeForm.firstChild) {
         intakeForm.removeChild(intakeForm.lastChild)
     }
     currentAmountOfDoses = 0;
 }
+
+// This function executes after clicking the settings button from the logged in screen
+// It hides the logged in section and shows the settings section
 
 function showSettings() {
     loginSection.style.display = "none";
@@ -224,6 +255,9 @@ function showSettings() {
     addUserInputs();
 }
 
+// This function executes after clicking the home button from the settings screen
+// It hides the settings section and shows the logged in section
+
 function goHome(event) {
     event.preventDefault();
     loginSection.style.display = "none";
@@ -235,6 +269,10 @@ function goHome(event) {
     alreadyRegisteredParagraph.style.display = "none";
     logoutParagraph.style.display = "block";
 }
+
+// This function excecutes after clicking the + button on the settings page
+// It checks to see what the last current amount of doses is,
+// Then adds an input field with the intake number as the name and id
 
 function addDose() {
     if (currentAmountOfDoses != 0) {
@@ -252,12 +290,21 @@ function addDose() {
     intakeForm.appendChild(newField);
 }
 
+// This function executes after clicking the - button on the settings page
+// It removes one input field and deducts 1 from the current amount of doses
+
 function removeDose() {
     intakeForm.removeChild(intakeForm.lastElementChild);
     currentAmountOfDoses = currentAmountOfDoses-1;
 }
 
-var dosesToSave = "";
+// This function executes after clicking the save button
+// It saves al input fields with the class dose to an array
+// Then it checks if all inputs contain a time
+// If not it shows an error message telling the user te either fill or remove empty input fields
+// If no empty fields, it saves the users intake settings to Firebase
+// Then it calls the removeUserInputs function to remove all input fields
+// Lastly it calls the addUserInputs function to add all saved inputs back to the screen
 
 function saveSettings() {
     dosesToSave = document.querySelectorAll('.dose');
@@ -300,6 +347,8 @@ function saveSettings() {
         }
     }
 }
+
+// Eventlisteners for all clicking actions
 
 btnLogin.addEventListener("click", loginEmailPassword);
 btnRegister.addEventListener("click", registerNewUser);
