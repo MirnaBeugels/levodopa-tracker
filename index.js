@@ -26,6 +26,7 @@ const previousDoseTimeAgo = document.querySelector('#previousDoseTimeAgo');
 const nextDoseTime = document.querySelector('#nextDoseTime');
 const nextDoseTimeAway = document.querySelector('#nextDoseTimeAway');
 const currentFoodStatus = document.querySelector('#currentFoodStatus');
+const settingsIcon = document.querySelector('#settingsIcon');
 const addField = document.querySelector('#addField');
 const removeField = document.querySelector('#removeField');
 const intakeForm = document.querySelector('#intakeForm');
@@ -361,6 +362,7 @@ function timeDoses() {
             // If the user has saved intakes:
             
             // Save the current time to a variable
+            var date = new Date();
             var time = date.toLocaleTimeString();
             console.log(`The time is ${time}`);
 
@@ -388,15 +390,19 @@ function timeDoses() {
                 intakeTimes.push(data[i]["value"]);
             }
 
-            // Convert all saved intakes into minutes
+            // Convert all saved intake times to minutes
             for (var i = 0; i < intakeTimes.length; i++) {
+                // Split the time up in hours and minutes into an array
                 var splitTime = intakeTimes[i].split(":");
+                // Convert the hours to a number to allow for calculation
                 var intakeHours = parseInt(splitTime[0]);
+                // Multiply hours by sixty to convert them to minutes
                 var intakeHoursToMinutes = intakeHours*60;
-                console.log(intakeHoursToMinutes);
+                // Convert the remaining minutes to a number to allow for calculation
                 var intakeMinutes = parseInt(splitTime[1]);
-                console.log(intakeMinutes);
+                // Add all together for a total number of minutes
                 var intakeTotalMinutes = intakeHoursToMinutes + intakeMinutes;
+                // Push the total number of minutes into an array
                 intakeTimesMinutes.push(intakeTotalMinutes);
             }
 
@@ -418,14 +424,14 @@ function timeDoses() {
                 }
             };
 
-            console.log(passedIntakes);
-            console.log(comingIntakes);
+            var previousIntakeMinutesAgo = 0;
+            var nextIntakeMinutesAway = 0;
 
             if (passedIntakes.length === 0) {
                 previousDoseText.innerHTML = "Je hebt de eerste inname van de dag nog niet gehad";
             } else {
                 var previousIntakeMinutes = Math.max(...passedIntakes); // hoogste uit array = intake die het kortst geleden is
-                var previousIntakeMinutesAgo = currentTimeMinutes - previousIntakeMinutes;
+                previousIntakeMinutesAgo = currentTimeMinutes - previousIntakeMinutes;
                 var previousIntakeRemainingMinutes = previousIntakeMinutesAgo % 60;
                 var previousIntakeRemainingHours = Math.floor(previousIntakeMinutesAgo/60);
                 var previousIntakeHours = Math.floor(previousIntakeMinutes/60);
@@ -436,14 +442,14 @@ function timeDoses() {
                 } else {
                     previousDoseTime.innerHTML = `${previousIntakeHours}:${previousIntakeMinutesMinutes}`;
                 }
-                previousDoseTimeAgo.innerHTML = `${previousIntakeRemainingHours} uur en ${previousIntakeRemainingMinutes} minuten geleden`
+                previousDoseTimeAgo.innerHTML = `${previousIntakeRemainingHours} uur en ${previousIntakeRemainingMinutes}`
             }
 
             if (comingIntakes.length === 0) {
                 nextDoseText.innerHTML = "Je hebt de laatste inname van de dag al gehad";
             } else {
                 var nextIntakeMinutes = Math.min(...comingIntakes);
-                var nextIntakeMinutesAway = nextIntakeMinutes - currentTimeMinutes;
+                nextIntakeMinutesAway = nextIntakeMinutes - currentTimeMinutes;
                 var nextIntakeRemainingMinutes = nextIntakeMinutesAway % 60;
                 var nextIntakeRemainingHours = Math.floor(nextIntakeMinutesAway/60);
                 var nextIntakeHours = Math.floor(nextIntakeMinutes/60);
@@ -455,7 +461,16 @@ function timeDoses() {
                     nextDoseTime.innerHTML = `${nextIntakeHours}:${nextIntakeMinutesMinutes}`;
                 }
                 nextDoseTimeAway.innerHTML = `${nextIntakeRemainingHours} uur en ${nextIntakeRemainingMinutes}`
-            }    
+            }  
+
+            console.log(previousIntakeMinutesAgo);
+            console.log(nextIntakeMinutesAway);
+            
+            if (previousIntakeMinutesAgo > 60 && nextIntakeMinutesAway > 30) {
+                settingsIcon.style.color = "rgb(53, 252, 116)";
+            } else {
+                settingsIcon.style.color = "rgb(252, 53, 99)";
+            }
 
         } else {
             // If the user has no saved intakes, tell the user it has not saved any yet
@@ -465,14 +480,6 @@ function timeDoses() {
 
     });
 }
-
-var date = new Date();
-var lastIntakeAgoMs = "";
-var nextIntakeAwayMs = "";
-var time = date.toLocaleTimeString();
-
-
-
 
 // Eventlisteners for all clicking actions
 
