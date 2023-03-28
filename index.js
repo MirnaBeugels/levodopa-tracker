@@ -358,28 +358,104 @@ function timeDoses() {
         var data = snapshot.val();
 
         if (data != null) {
-            // If the user has saved intakes
-            var i = 0;
+            // If the user has saved intakes:
+            
+            // Save the current time to a variable
+            var time = date.toLocaleTimeString();
+            console.log(`The time is ${time}`);
+
+            // Split the current time into hours, minutes and seconds in an array
+            var splitCurrentTime = time.split(":");
+            console.log(`The time in an array is: ${splitCurrentTime}`);
+
+            // Remove the seconds, we don't need those for calculation
+            splitCurrentTime.splice(splitCurrentTime.length-1);
+            splitCurrentTime.map(Number);
+            console.log(`The time in an array with last digit removed: ${splitCurrentTime}`);
+
+            // Convert the hours to minutes and add the minutes we had left
+            var currentTimeHours = parseInt(splitCurrentTime[0]);
+            var currentTimeMinutes = parseInt(splitCurrentTime[1])
+            var currentTimeHoursToMinutes = (currentTimeHours*60);
+            var currentTimeMinutes = currentTimeHoursToMinutes + currentTimeMinutes;
+            console.log(`Current time in minutes: ${currentTimeMinutes}`);
+
             var intakeTimes = []
             var intakeTimesMinutes = []
 
             // Push all intake times to intakeTimes list
-            for (i=0; i<data.length; i++) {
+            for (var i = 0; i < data.length; i++) {
                 intakeTimes.push(data[i]["value"]);
             }
 
-            i = 0;
-            var minutes = 0;
-
             // Convert all saved intakes into minutes
-            for (i=0; i<intakeTimes.length; i++) {
+            for (var i = 0; i < intakeTimes.length; i++) {
                 var splitTime = intakeTimes[i].split(":");
-                var minutes = splitTime[0]*60+splitTime[1];
-                intakeTimesMinutes.push(minutes);
-                console.log(intakeTimesMinutes);
+                var intakeHours = parseInt(splitTime[0]);
+                var intakeHoursToMinutes = intakeHours*60;
+                console.log(intakeHoursToMinutes);
+                var intakeMinutes = parseInt(splitTime[1]);
+                console.log(intakeMinutes);
+                var intakeTotalMinutes = intakeHoursToMinutes + intakeMinutes;
+                intakeTimesMinutes.push(intakeTotalMinutes);
             }
 
-            console.log(intakeTimes);
+            // Log the current time and intake times in minutes to the console
+            console.log(currentTimeMinutes);
+            console.log(intakeTimesMinutes);
+
+            // Check which intaketimes have already passed and which are still to come
+            // Save them in separate arrays
+
+            var passedIntakes = [];
+            var comingIntakes = [];
+
+            for (var i = 0; i < intakeTimesMinutes.length; i++) {
+                if (intakeTimesMinutes[i] < currentTimeMinutes) {
+                    passedIntakes.push(intakeTimesMinutes[i]);
+                } else {
+                    comingIntakes.push(intakeTimesMinutes[i]);
+                }
+            };
+
+            console.log(passedIntakes);
+            console.log(comingIntakes);
+
+            if (passedIntakes.length === 0) {
+                previousDoseText.innerHTML = "Je hebt de eerste inname van de dag nog niet gehad";
+            } else {
+                var previousIntakeMinutes = Math.max(...passedIntakes); // hoogste uit array = intake die het kortst geleden is
+                var previousIntakeMinutesAgo = currentTimeMinutes - previousIntakeMinutes;
+                var previousIntakeRemainingMinutes = previousIntakeMinutesAgo % 60;
+                var previousIntakeRemainingHours = Math.floor(previousIntakeMinutesAgo/60);
+                var previousIntakeHours = Math.floor(previousIntakeMinutes/60);
+                var previousIntakeMinutesMinutes = previousIntakeMinutes % 60;
+                if (previousIntakeMinutesMinutes < 10) {
+                    previousIntakeMinutesMinutes = '0'+ previousIntakeMinutesMinutes;
+                    previousDoseTime.innerHTML = `${previousIntakeHours}:${previousIntakeMinutesMinutes}`;
+                } else {
+                    previousDoseTime.innerHTML = `${previousIntakeHours}:${previousIntakeMinutesMinutes}`;
+                }
+                previousDoseTimeAgo.innerHTML = `${previousIntakeRemainingHours} uur en ${previousIntakeRemainingMinutes} minuten geleden`
+            }
+
+            if (comingIntakes.length === 0) {
+                nextDoseText.innerHTML = "Je hebt de laatste inname van de dag al gehad";
+            } else {
+                var nextIntakeMinutes = Math.min(...comingIntakes);
+                var nextIntakeMinutesAway = nextIntakeMinutes - currentTimeMinutes;
+                var nextIntakeRemainingMinutes = nextIntakeMinutesAway % 60;
+                var nextIntakeRemainingHours = Math.floor(nextIntakeMinutesAway/60);
+                var nextIntakeHours = Math.floor(nextIntakeMinutes/60);
+                var nextIntakeMinutesMinutes = nextIntakeMinutes % 60;
+                if (nextIntakeMinutesMinutes < 10) {
+                    nextIntakeMinutesMinutes = '0'+ nextIntakeMinutesMinutes;
+                    nextDoseTime.innerHTML = `${nextIntakeHours}:${nextIntakeMinutesMinutes}`;
+                } else {
+                    nextDoseTime.innerHTML = `${nextIntakeHours}:${nextIntakeMinutesMinutes}`;
+                }
+                nextDoseTimeAway.innerHTML = `${nextIntakeRemainingHours} uur en ${nextIntakeRemainingMinutes}`
+            }    
 
         } else {
             // If the user has no saved intakes, tell the user it has not saved any yet
@@ -391,12 +467,10 @@ function timeDoses() {
 }
 
 var date = new Date();
-var lastIntake = "";
-var nextIntake = "";
 var lastIntakeAgoMs = "";
 var nextIntakeAwayMs = "";
 var time = date.toLocaleTimeString();
-console.log(time);
+
 
 
 
