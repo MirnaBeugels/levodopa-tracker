@@ -200,7 +200,7 @@ button {
     color: #fff;
 }
 
-#previousDose p, #nextDose p {
+#previousDose .label, #nextDose .label {
     font-size: 75%;
     color: #394D60;
 }

@@ -35,6 +35,8 @@ const divLoginSucces = document.querySelector('#divLoginSucces');
 const lblLoginSuccesMessage = document.querySelector('#lblLoginSuccesMessage');
 const divSubmitSettingsError = document.querySelector('#divSubmitSettingsError');
 const homeIcon = document.querySelector('#homeIcon');
+const previousDoseText = document.querySelector('#previousDoseText');
+const nextDoseText = document.querySelector('#nextDoseText');
 
 // Calling variables for global use
 
@@ -81,6 +83,7 @@ onAuthStateChanged(auth, (user) => {
         console.log(uid);
         console.log(displayName);
         console.log(email);
+        timeDoses()
         // Show and hide sections
         loginSection.style.display = "none";
         loggedinSection.style.display = "grid";
@@ -347,6 +350,55 @@ function saveSettings() {
         }
     }
 }
+
+function timeDoses() {
+    var uid = auth.currentUser.uid;
+    const checkUser = ref(database, 'users/'+uid);
+    onValue(checkUser, (snapshot) => {
+        var data = snapshot.val();
+
+        if (data != null) {
+            // If the user has saved intakes
+            var i = 0;
+            var intakeTimes = []
+            var intakeTimesMinutes = []
+
+            // Push all intake times to intakeTimes list
+            for (i=0; i<data.length; i++) {
+                intakeTimes.push(data[i]["value"]);
+            }
+
+            i = 0;
+            var minutes = 0;
+
+            // Convert all saved intakes into minutes
+            for (i=0; i<intakeTimes.length; i++) {
+                var splitTime = intakeTimes[i].split(":");
+                var minutes = splitTime[0]*60+splitTime[1];
+                intakeTimesMinutes.push(minutes);
+                console.log(intakeTimesMinutes);
+            }
+
+            console.log(intakeTimes);
+
+        } else {
+            // If the user has no saved intakes, tell the user it has not saved any yet
+            previousDoseText.innerHTML = "Je hebt nog geen innames opgeslagen";
+            nextDoseText.innerHTML = "Je hebt nog geen innames opgeslagen";
+        };
+
+    });
+}
+
+var date = new Date();
+var lastIntake = "";
+var nextIntake = "";
+var lastIntakeAgoMs = "";
+var nextIntakeAwayMs = "";
+var time = date.toLocaleTimeString();
+console.log(time);
+
+
 
 // Eventlisteners for all clicking actions
 
