@@ -417,59 +417,157 @@ function timeDoses() {
             var comingIntakes = [];
 
             for (var i = 0; i < intakeTimesMinutes.length; i++) {
+                // When the intaketime in minutes is less then current time in minutes
+                // Push it into the passedIntakes array
                 if (intakeTimesMinutes[i] < currentTimeMinutes) {
                     passedIntakes.push(intakeTimesMinutes[i]);
                 } else {
+                    // Otherwise push it into the comingIntakes array
                     comingIntakes.push(intakeTimesMinutes[i]);
                 }
             };
 
+            // Calling variables for minutes ago/way of the previous and next intake
+            // We need these to control the allowed to eat or not icon later on
             var previousIntakeMinutesAgo = 0;
             var nextIntakeMinutesAway = 0;
 
             if (passedIntakes.length === 0) {
-                previousDoseText.innerHTML = "Je hebt de eerste inname van de dag nog niet gehad";
-            } else {
-                var previousIntakeMinutes = Math.max(...passedIntakes); // hoogste uit array = intake die het kortst geleden is
-                previousIntakeMinutesAgo = currentTimeMinutes - previousIntakeMinutes;
+                // When there is no values in the passed intake array
+                // the previous intake was the last intake of the day before
+                var previousIntakeMinutes = Math.max(...comingIntakes);
+                
+                // 24hrs - previous intake time + the current time = how long ago the previous intake was
+                // In order to be able to show how many hours and minutes ago the previous intake was
+                // we need to define how many full hours fit into this time and how many minutes remain
+                previousIntakeMinutesAgo = (1440-previousIntakeMinutes)+currentTimeMinutes;
                 var previousIntakeRemainingMinutes = previousIntakeMinutesAgo % 60;
                 var previousIntakeRemainingHours = Math.floor(previousIntakeMinutesAgo/60);
+
+                // In order to be able to show the time at which the intake took place we do the same
+                // We define how many full hours fit into the intake time and how many minutes remain
                 var previousIntakeHours = Math.floor(previousIntakeMinutes/60);
                 var previousIntakeMinutesMinutes = previousIntakeMinutes % 60;
+
+                // Show at which time the previous intake took place
+                // If the previous intake minutes is below 10, we need to add a zero
+                // This ensures time displayed correctly, we get 10:09 instead of 10:9
+                // When the minutes are 10 or above, we don't want to add a 0 (10:010 would look weird)
                 if (previousIntakeMinutesMinutes < 10) {
                     previousIntakeMinutesMinutes = '0'+ previousIntakeMinutesMinutes;
                     previousDoseTime.innerHTML = `${previousIntakeHours}:${previousIntakeMinutesMinutes}`;
                 } else {
                     previousDoseTime.innerHTML = `${previousIntakeHours}:${previousIntakeMinutesMinutes}`;
                 }
+
+                // Now show how long ago the previous intake was in hours and minutes
                 previousDoseTimeAgo.innerHTML = `${previousIntakeRemainingHours} uur en ${previousIntakeRemainingMinutes}`
+
+            } else {
+                
+                // When the passedIntakes does have content, the last intake in it is our previous intake
+                // We take this intake and then calculate how many minutes ago it took place
+                var previousIntakeMinutes = Math.max(...passedIntakes); 
+                previousIntakeMinutesAgo = currentTimeMinutes - previousIntakeMinutes;
+                
+                // In order to be able to show how many hours and minutes ago the previous intake was
+                // we need to define how many full hours fit into this time and how many minutes remain
+                var previousIntakeRemainingMinutes = previousIntakeMinutesAgo % 60;
+                var previousIntakeRemainingHours = Math.floor(previousIntakeMinutesAgo/60);
+
+                // In order to be able to show the time at which the intake took place we do the same
+                // We define how many full hours fit into the intake time and how many minutes remain
+                var previousIntakeHours = Math.floor(previousIntakeMinutes/60);
+                var previousIntakeMinutesMinutes = previousIntakeMinutes % 60;
+
+                // Show at which time the previous intake took place
+                // If the remaining minutes are below 10, we need to add a zero before this number
+                // This ensures time is displayed correctly, we get 10:09 instead of 10:9
+                // When the minutes are 10 or above, we don't want to add this 0 (10:010 would look weird)
+                if (previousIntakeMinutesMinutes < 10) {
+                    previousIntakeMinutesMinutes = '0'+ previousIntakeMinutesMinutes;
+                    previousDoseTime.innerHTML = `${previousIntakeHours}:${previousIntakeMinutesMinutes}`;
+                } else {
+                    previousDoseTime.innerHTML = `${previousIntakeHours}:${previousIntakeMinutesMinutes}`;
+                }
+
+                // Now show how long ago the previous intake was in hours and minutes
+                previousDoseTimeAgo.innerHTML = `${previousIntakeRemainingHours} uur en ${previousIntakeRemainingMinutes}`
+            
             }
 
             if (comingIntakes.length === 0) {
-                nextDoseText.innerHTML = "Je hebt de laatste inname van de dag al gehad";
-            } else {
-                var nextIntakeMinutes = Math.min(...comingIntakes);
-                nextIntakeMinutesAway = nextIntakeMinutes - currentTimeMinutes;
+                // When the comingIntakes array does not contain any values,
+                // The next intake is the first intake of the next day
+                var nextIntakeMinutes = Math.min(...passedIntakes);
+
+                // 24hrs - the current time in minutes
+                // + the next intake in minutes = how many minutes away this intake will take place
+                nextIntakeMinutesAway = (1440-currentTimeMinutes)+nextIntakeMinutes;
+                
+                // In order to be able to show how many hours and minutes away the next intake is
+                // we need to define how many full hours fit into this time and how many minutes remain
                 var nextIntakeRemainingMinutes = nextIntakeMinutesAway % 60;
                 var nextIntakeRemainingHours = Math.floor(nextIntakeMinutesAway/60);
+
+                // In order to be able to show the time at what time the intake will take place we do the same
+                // We define how many full hours fit into the intake time and how many minutes remain
                 var nextIntakeHours = Math.floor(nextIntakeMinutes/60);
                 var nextIntakeMinutesMinutes = nextIntakeMinutes % 60;
+
+                // Show at which time the next intake will take place
+                // If the remaining minutes are below 10, we need to add a zero before this number
+                // This ensures time is displayed correctly, we get 10:09 instead of 10:9
+                // When the minutes are 10 or above, we don't want to add this 0 (10:010 would look weird)
                 if (nextIntakeMinutesMinutes < 10) {
                     nextIntakeMinutesMinutes = '0'+ nextIntakeMinutesMinutes;
                     nextDoseTime.innerHTML = `${nextIntakeHours}:${nextIntakeMinutesMinutes}`;
                 } else {
                     nextDoseTime.innerHTML = `${nextIntakeHours}:${nextIntakeMinutesMinutes}`;
                 }
+                
+                // Now show how long ago the previous intake was in hours and minutes
+                nextDoseTimeAway.innerHTML = `${nextIntakeRemainingHours} uur en ${nextIntakeRemainingMinutes}`
+            
+            } else {
+
+                // When the comingIntakes array does have content, the first intake in it is our next intake
+                // We take this intake and then calculate how many minutes away from now it will take place
+                var nextIntakeMinutes = Math.min(...comingIntakes);
+                nextIntakeMinutesAway = nextIntakeMinutes - currentTimeMinutes;
+                
+                // In order to be able to show how many hours and minutes away the next intake is
+                // we need to define how many full hours fit into this time and how many minutes remain
+                var nextIntakeRemainingMinutes = nextIntakeMinutesAway % 60;
+                var nextIntakeRemainingHours = Math.floor(nextIntakeMinutesAway/60);
+                
+                // In order to be able to show the time at what time the intake will take place we do the same
+                // We define how many full hours fit into the intake time and how many minutes remain
+                var nextIntakeHours = Math.floor(nextIntakeMinutes/60);
+                var nextIntakeMinutesMinutes = nextIntakeMinutes % 60;
+                
+                // Show at which time the next intake will take place
+                // If the remaining minutes are below 10, we need to add a zero before this number
+                // This ensures time is displayed correctly, we get 10:09 instead of 10:9
+                // When the minutes are 10 or above, we don't want to add this 0 (10:010 would look weird)
+                if (nextIntakeMinutesMinutes < 10) {
+                    nextIntakeMinutesMinutes = '0'+ nextIntakeMinutesMinutes;
+                    nextDoseTime.innerHTML = `${nextIntakeHours}:${nextIntakeMinutesMinutes}`;
+                } else {
+                    nextDoseTime.innerHTML = `${nextIntakeHours}:${nextIntakeMinutesMinutes}`;
+                }
+
+                // Now show how long ago the previous intake was in hours and minutes
                 nextDoseTimeAway.innerHTML = `${nextIntakeRemainingHours} uur en ${nextIntakeRemainingMinutes}`
             }  
-
-            console.log(previousIntakeMinutesAgo);
-            console.log(nextIntakeMinutesAway);
             
-            if (previousIntakeMinutesAgo > 60 && nextIntakeMinutesAway > 30) {
-                settingsIcon.style.color = "rgb(53, 252, 116)";
-            } else {
+            // Now we color the foodstatus icon, if the previous intake is 60 or less minutes ago,
+            // or the next intake is 30 or less minutes away, the patient is not allowed to eat
+            // and the icons turns red, otherwise it will be green indicating it is now safe to eat
+            if (previousIntakeMinutesAgo <= 60 || nextIntakeMinutesAway <= 30) {
                 settingsIcon.style.color = "rgb(252, 53, 99)";
+            } else {
+                settingsIcon.style.color = "rgb(53, 252, 116)";
             }
 
         } else {
