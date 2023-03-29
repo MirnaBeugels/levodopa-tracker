@@ -106,8 +106,32 @@ a {
     width: 100%;
 }
 
+#intakeForm {
+    display: grid;
+}
+
+#intakeForm input {
+    align-self: stretch;
+    display: block;
+    width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: 0;
+    border-left: 0px;
+    border-top: 0px;
+    border-right: 0px;
+    text-align: left;
+}
+
+#intakeForm input:before {
+    content: 'Tijd:';
+    margin-right: .6em;
+    color: #657a8d;
+ }
+
 #login #form input, #registration #form input, #settings #intakeForm input {
-    all: unset;
+    /* all: unset; */
+    display: block;
     width: 100%;
     background-color: #0B2239;
     border-bottom: 1px solid #394D60;

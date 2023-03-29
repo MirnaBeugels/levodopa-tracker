@@ -303,6 +303,10 @@ function removeDose() {
 // Then it calls the removeUserInputs function to remove all input fields
 // Lastly it calls the addUserInputs function to add all saved inputs back to the screen
 
+// let noEmptyInputs = new Promise(resolve => {
+//     if (check)
+//   });
+
 function saveSettings() {
     dosesToSave = document.querySelectorAll('.dose');
 
@@ -320,20 +324,34 @@ function saveSettings() {
     // Check if all inputs contain a time
 
     var checkForInput = Object.values(allIntakes);
+    var checkedInputs = []
 
     for (var i = 0; i < checkForInput.length; i++) {
         if (checkForInput[i]["value"] == "") {
-            divSubmitSettingsError.style.display = "block";
-            break;
+            checkedInputs.push(false);
         } else {
-            divSubmitSettingsError.style.display = "none";
-            var uid = auth.currentUser.uid;
-            set (ref (database, 'users/'+uid), allIntakes);
-            // remove and return allIntakes as saved
-            removeUserInputs()
-            addUserInputs();
+            checkedInputs.push(true);
         }
     }
+
+    var checker = checkedInputs.every(Boolean);
+
+    // If they don't don't save and ask the user to either fill in a time or delete the empty field
+    // If they do, save all intakes to firebase, delete all inputs from the screen and reload them
+
+    if (checker != true) {
+        divSubmitSettingsError.style.display = "block";
+        console.log("found an empty intake")
+    } else {
+        divSubmitSettingsError.style.display = "none";
+        var uid = auth.currentUser.uid;
+        set (ref (database, 'users/'+uid), allIntakes);
+        // remove and return allIntakes as saved
+        removeUserInputs()
+        addUserInputs();
+    }
+
+    console.log(checkedInputs);
 }
 
 function timeDoses() {
