@@ -25,7 +25,6 @@ const previousDoseTime = document.querySelector('#previousDoseTime');
 const previousDoseTimeAgo = document.querySelector('#previousDoseTimeAgo');
 const nextDoseTime = document.querySelector('#nextDoseTime');
 const nextDoseTimeAway = document.querySelector('#nextDoseTimeAway');
-const currentFoodStatus = document.querySelector('#currentFoodStatus');
 const settingsIcon = document.querySelector('#settingsIcon');
 const addField = document.querySelector('#addField');
 const removeField = document.querySelector('#removeField');
@@ -81,9 +80,6 @@ onAuthStateChanged(auth, (user) => {
         var uid = user.uid;
         var displayName = user.displayName;
         var email = user.email;
-        console.log(uid);
-        console.log(displayName);
-        console.log(email);
         timeDoses()
         // Show and hide sections
         loginSection.style.display = "none";
@@ -211,8 +207,6 @@ function addUserInputs() {
                         snapshot.forEach((childSnapshot) => {
                             const intakeNr = childSnapshot.val()["key"];
                             const intakeTime = childSnapshot.val()["value"];
-                            // console.log(intakeNr);
-                            // console.log(intakeTime);
 
                             currentAmountOfDoses = currentAmountOfDoses+1;
                             var newField = document.createElement("input");
@@ -285,7 +279,6 @@ function addDose() {
         currentAmountOfDoses = currentAmountOfDoses;
     }
     currentAmountOfDoses = currentAmountOfDoses+1;
-    console.log(`After adding a dose ${currentAmountOfDoses} `)
     var newField = document.createElement("input");
     newField.setAttribute("type", "time");
     newField.setAttribute("class", "dose");
@@ -324,27 +317,18 @@ function saveSettings() {
          }
     );
 
-    console.log(allIntakes);
-
     // Check if all inputs contain a time
 
     var checkForInput = Object.values(allIntakes);
 
-    console.log(checkForInput.length);
-
     for (var i = 0; i < checkForInput.length; i++) {
-        console.log(checkForInput[i]["value"])
         if (checkForInput[i]["value"] == "") {
-            console.log('check for empty fields');
             divSubmitSettingsError.style.display = "block";
             break;
         } else {
-            console.log('ok to save');
             divSubmitSettingsError.style.display = "none";
             var uid = auth.currentUser.uid;
-
             set (ref (database, 'users/'+uid), allIntakes);
-
             // remove and return allIntakes as saved
             removeUserInputs()
             addUserInputs();
@@ -364,23 +348,19 @@ function timeDoses() {
             // Save the current time to a variable
             var date = new Date();
             var time = date.toLocaleTimeString();
-            console.log(`The time is ${time}`);
 
             // Split the current time into hours, minutes and seconds in an array
             var splitCurrentTime = time.split(":");
-            console.log(`The time in an array is: ${splitCurrentTime}`);
 
             // Remove the seconds, we don't need those for calculation
             splitCurrentTime.splice(splitCurrentTime.length-1);
             splitCurrentTime.map(Number);
-            console.log(`The time in an array with last digit removed: ${splitCurrentTime}`);
 
             // Convert the hours to minutes and add the minutes we had left
             var currentTimeHours = parseInt(splitCurrentTime[0]);
             var currentTimeMinutes = parseInt(splitCurrentTime[1])
             var currentTimeHoursToMinutes = (currentTimeHours*60);
             var currentTimeMinutes = currentTimeHoursToMinutes + currentTimeMinutes;
-            console.log(`Current time in minutes: ${currentTimeMinutes}`);
 
             var intakeTimes = []
             var intakeTimesMinutes = []
@@ -405,10 +385,6 @@ function timeDoses() {
                 // Push the total number of minutes into an array
                 intakeTimesMinutes.push(intakeTotalMinutes);
             }
-
-            // Log the current time and intake times in minutes to the console
-            console.log(currentTimeMinutes);
-            console.log(intakeTimesMinutes);
 
             // Check which intaketimes have already passed and which are still to come
             // Save them in separate arrays
